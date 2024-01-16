@@ -1,5 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
+const { GENDERS } = require('./../constants');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -39,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(10),
         allowNull: false,
         validate: {
-          isIn: [['male', 'femele', 'other']],
+          isIn: [GENDERS],
         },
       },
       image: { type: DataTypes.STRING },
