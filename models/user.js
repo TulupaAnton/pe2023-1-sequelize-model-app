@@ -11,15 +11,38 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+  // unique,allowNull,validate
   User.init(
     {
-      firstName: DataTypes.STRING,
-      lastName: DataTypes.STRING,
-      email: DataTypes.STRING,
-      passwHash: DataTypes.STRING,
-      birthday: DataTypes.DATEONLY,
-      gender: DataTypes.STRING,
-      image: DataTypes.STRING,
+      firstName: {
+        type: DataTypes.STRING(64),
+        allowNull: false,
+        validate: { is: /^[A-Z][a-z]+$/, len: [2, 64] },
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: { is: /^[A-Z][a-z]+$/ },
+      },
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+        validate: { isEmail: true },
+      },
+      passwHash: { type: DataTypes.STRING, allowNull: false },
+      birthday: {
+        type: DataTypes.DATEONLY,
+        validate: { isBefore: new Date().toISOString() },
+      },
+      gender: {
+        type: DataTypes.STRING(10),
+        allowNull: false,
+        validate: {
+          isIn: [['male', 'femele', 'other']],
+        },
+      },
+      image: { type: DataTypes.STRING },
     },
     {
       sequelize,
