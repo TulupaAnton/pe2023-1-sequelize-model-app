@@ -5,6 +5,5 @@ module.exports.paginateUsers = (req, res, next) => {
     limit: Number(results),
     offset: (page - 1) * results,
   };
-
   next();
 };

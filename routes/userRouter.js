@@ -1,11 +1,12 @@
 const { Router } = require('express');
 const { usersController } = require('../controllers');
+const { paginate } = require('../middleware');
 
 const usersRouter = Router();
 
 usersRouter
   .route('/')
-  .get(usersController.getUsers)
+  .get(paginate.paginateUsers, usersController.getUsers)
   .post(usersController.createUsers);
 
 usersRouter

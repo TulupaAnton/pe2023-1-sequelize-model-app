@@ -42,13 +42,13 @@ module.exports.createUsers = async (req, res, next) => {
 };
 
 module.exports.getUsers = async (req, res, next) => {
-  const { page = 1, results = 10 } = req.query;
+  const { limit, offset } = req.pagination;
   try {
     const foundUsers = await User.findAll({
       raw: true,
       attributes: { exclude: ['passwHash', 'createdAt', 'updatedAt'] },
-      limit: results,
-      offset: (page - 1) * results,
+      limit,
+      offset,
       order: ['id'],
     });
     res.status(200).send({ data: foundUsers });
@@ -57,7 +57,22 @@ module.exports.getUsers = async (req, res, next) => {
   }
 };
 
-module.exports.getUserById = async (req, res, next) => {};
+module.exports.getUserById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const foundUsers = await User.findByPk(id, {
+      raw: true,
+      attributes: { exclude: ['passwHash', 'createdAt', 'updatedAt'] },
+    });
+
+    if (!foundUsers) {
+      return res.status(404).send([{ status: 404, message: 'User not Found' }]);
+    }
+    res.status(200).send({ data: foundUsers });
+  } catch (err) {
+    next();
+  }
+};
 
 module.exports.updateUsersById = async (req, res, next) => {};
 
