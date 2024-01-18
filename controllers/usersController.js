@@ -1,4 +1,5 @@
 const { hashSync } = require('bcrypt');
+const _ = require('lodash');
 const { User } = require('./../models');
 
 // // Шиифрування
@@ -18,17 +19,43 @@ module.exports.createUsers = async (req, res, next) => {
   try {
     body.passwHash = hashSync(body.passwHash, HASH_SALT);
 
-    const crestedUser = await User.create(body);
-    if (!crestedUser) {
+    const createdUser = await User.create(body);
+    if (!createdUser) {
       return res.status(400).send('Somthing went wrong');
     }
-    res.status(201).send(crestedUser);
+
+    // const preparedUser = { ...createdUser.get() };
+    // delete preparedUser.passwHash;
+    // delete preparedUser.createdAt;
+    // delete preparedUser.updatedAt;
+
+    const preparedUser = _.omit(createdUser.get(), [
+      'passwHash',
+      'createdAt',
+      'updatedAt',
+    ]);
+
+    res.status(201).send({ data: preparedUser });
   } catch (err) {
     next(err);
   }
 };
 
-module.exports.getUsers = async (req, res, next) => {};
+module.exports.getUsers = async (req, res, next) => {
+  const { page = 1, results = 10 } = req.query;
+  try {
+    const foundUsers = await User.findAll({
+      raw: true,
+      attributes: { exclude: ['passwHash', 'createdAt', 'updatedAt'] },
+      limit: results,
+      offset: (page - 1) * results,
+      order: ['id'],
+    });
+    res.status(200).send({ data: foundUsers });
+  } catch (err) {
+    next(err);
+  }
+};
 
 module.exports.getUserById = async (req, res, next) => {};
 

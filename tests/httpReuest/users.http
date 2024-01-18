@@ -2,10 +2,14 @@ POST http://localhost:5000/api/users
 Content-Type: application/json
 
 {
-    "firstName":"Jane",
-    "lastName":"Doe",
-    "email":"m6@m.com",
+    "firstName":"Loo",
+    "lastName":"Le",
+    "email":"h@m.com",
     "passwHash": "123",
     "birthday":"2001-12-01",
     "gender":"male"
 }
+
+
+###
+ GET  http://localhost:5000/api/users?page=1&results=5 
