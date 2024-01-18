@@ -37,17 +37,15 @@ PATCH http://localhost:5000/api/users/9
 Content-Type: application/json
 
 {
-    "lastName":"Le",
-
+    "lastName":"Le"
 }
 
 ### 404
-PATCH http://localhost:5000/api/users/99
+PATCH http://localhost:5000/api/users/98
 Content-Type: application/json
 
 {
-    "lastName":"Le",
-
+    "lastName":"Le"
 }
 
 ### 500 (422)
@@ -55,7 +53,6 @@ PATCH http://localhost:5000/api/users/9
 Content-Type: application/json
 
 {
-    "firstName":"54231",
-
+    "firstName":"123154542132"
 }
 
