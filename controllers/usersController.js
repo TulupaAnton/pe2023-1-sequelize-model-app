@@ -9,7 +9,6 @@ const { User } = require('./../models');
 // "123"->"adslfaksflskfalfkaslf"
 
 // const passw = '12345';
-const HASH_SALT = 10;
 // const passwHash = hashSync(passw, HASH_SALT);
 // console.log('passwHash :>> ', passwHash);
 
@@ -17,8 +16,6 @@ module.exports.createUsers = async (req, res, next) => {
   const { body } = req;
 
   try {
-    body.passwHash = hashSync(body.passwHash, HASH_SALT);
-
     const createdUser = await User.create(body);
     if (!createdUser) {
       return res.status(400).send('Somthing went wrong');

@@ -1,18 +1,15 @@
 'use strict';
 const { Model } = require('sequelize');
+const { hashSync } = require('bcrypt');
 const { GENDERS } = require('./../constants');
+
+const HASH_SALT = 10;
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate (models) {
-      // define association here
-    }
+    static associate (models) {}
   }
-  // unique,allowNull,validate
+
   User.init(
     {
       firstName: {
@@ -31,7 +28,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: { isEmail: true },
       },
-      passwHash: { type: DataTypes.STRING, allowNull: false },
+      passwHash: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        set (value) {
+          this.setDataValue('passwHash', hashSync(value, HASH_SALT));
+        },
+      },
+
       birthday: {
         type: DataTypes.DATEONLY,
         validate: { isBefore: new Date().toISOString() },
