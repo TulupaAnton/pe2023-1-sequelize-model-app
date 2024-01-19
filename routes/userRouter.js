@@ -13,6 +13,7 @@ usersRouter
   .route('/:id')
   .get(usersController.getUserById)
   .patch(usersController.updateUsersById)
+  .put(usersController.updateOrCreateUser, usersController.createUsers)
   .delete(usersController.deleteUsersById);
 
 module.exports = usersRouter;

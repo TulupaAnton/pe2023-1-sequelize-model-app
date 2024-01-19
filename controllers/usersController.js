@@ -99,6 +99,42 @@ module.exports.updateUsersById = async (req, res, next) => {
   }
 };
 
+module.exports.updateOrCreateUser = async (req, res, next) => {
+  // первірити чи існує
+  // + оновити
+  //- створити
+  // спробувати оновити
+  // якщо updatedUsersCount ===1, то все,200
+  // якщо updatedUsersCount ===0, то створити ,201
+
+  const {
+    body,
+    params: { id },
+  } = req;
+
+  try {
+    const [updatedUsersCount, [updatedUser]] = await User.update(body, {
+      where: { id },
+      raw: true,
+      returning: true,
+    });
+
+    if (!updatedUsersCount) {
+      body.id = id;
+      return next();
+    }
+
+    const preparedUser = _.omit(updatedUser, [
+      'passwHash',
+      'createdAt',
+      'updatedAt',
+    ]);
+    res.status(200).send({ data: preparedUser });
+  } catch (err) {
+    next();
+  }
+};
+
 module.exports.deleteUsersById = async (req, res, next) => {
   const { id } = req.params;
 
